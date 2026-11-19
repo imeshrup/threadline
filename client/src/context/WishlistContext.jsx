@@ -9,7 +9,10 @@ export function WishlistProvider({ children }) {
   const [ids, setIds] = useState(new Set());
 
   useEffect(() => {
-    if (!user) return setIds(new Set());
+    if (!user) {
+      setIds(new Set());
+      return;
+    }
     api('/users/wishlist').then((list) => setIds(new Set(list.map((p) => p._id)))).catch(() => {});
   }, [user]);
 
