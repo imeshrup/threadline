@@ -28,6 +28,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/upload', uploadRouter);
 app.use('/img/garment', require('./routes/garment'));
 app.use('/uploads', express.static(UPLOAD_DIR));
+app.use('/product-photos', express.static(path.join(__dirname, '..', 'product-photos'), { maxAge: '7d' }));
 
 // In production, serve the built React app.
 const clientDist = path.join(__dirname, '..', '..', 'client', 'dist');

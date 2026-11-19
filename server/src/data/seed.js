@@ -21,16 +21,35 @@ const REVIEW_TEXT = [
   [5, 'My new favorite piece. Washes really well.'],
 ];
 
+const fs = require('fs');
+const path = require('path');
+
+// Real photos: put files in server/product-photos named <product-slug>-1.jpg, <product-slug>-2.jpg ...
+// (jpg, jpeg, png or webp). They're matched to colors in order: photo 1 = first color, and so on.
+const PHOTO_DIR = path.join(__dirname, '..', '..', 'product-photos');
+const photosFor = (slug) => {
+  let files = [];
+  try { files = fs.readdirSync(PHOTO_DIR); } catch { return []; }
+  const rx = new RegExp(`^${slug}-(\\d+)\\.(jpe?g|png|webp)$`, 'i');
+  return files
+    .map((f) => ({ f, m: f.match(rx) }))
+    .filter((x) => x.m)
+    .sort((a, b) => Number(a.m[1]) - Number(b.m[1]))
+    .map((x) => `/product-photos/${x.f}`);
+};
+
 function buildProduct(item) {
   const variants = [];
   for (const color of item.colors)
     for (const size of item.sizes) variants.push({ size, color: color.name, stock: Math.floor(rand() * 25) + (rand() < 0.1 ? 0 : 3) });
   const { shape, ...rest } = item;
+  const slug = slugify(item.name);
+  const photos = photosFor(slug);
   return {
     ...rest,
-    slug: slugify(item.name),
+    slug,
     brand: 'Threadline',
-    images: item.colors.map((c) => `/img/garment/${shape}/${c.hex}.svg`),
+    images: photos.length ? photos : item.colors.map((c) => `/img/garment/${shape}/${c.hex}.svg`),
     variants,
   };
 }

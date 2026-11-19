@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    proxy: { '/api': target, '/img': target, '/uploads': target },
+    proxy: { '/api': target, '/img': target, '/uploads': target, '/product-photos': target },
   },
 });

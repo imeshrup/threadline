@@ -33,17 +33,12 @@ const DETAILS = {
 };
 
 const hexOk = (h) => /^[0-9a-f]{6}$/i.test(h);
-const lighten = (hex, amt) => {
-  const n = parseInt(hex, 16);
-  const ch = (s) => Math.round(((n >> s) & 255) + (255 - ((n >> s) & 255)) * amt);
-  return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
-};
 
 router.get('/:type/:hex.svg', (req, res) => {
   const { type } = req.params;
   const hex = hexOk(req.params.hex) ? req.params.hex : '888888';
   const shape = SHAPES[type] || SHAPES.tee;
-  const bg = lighten(hex, 0.86);
+  const bg = '#f4f4f4';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 400" width="960" height="800">
 <rect width="480" height="400" fill="${bg}"/>
 <ellipse cx="240" cy="372" rx="150" ry="12" fill="rgba(0,0,0,.08)"/>
